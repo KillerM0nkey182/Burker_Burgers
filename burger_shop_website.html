@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Burker Burgers</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red: #E8200A;
+      --dark-red: #b01a08;
+      --black: #111111;
+      --off-black: #1a1a1a;
+      --yellow: #FFD100;
+      --cream: #FFF8EE;
+      --gray: #888;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--black);
+      color: white;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 48px;
+      background: rgba(17,17,17,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 2px;
+      color: var(--yellow);
+    }
+
+    .nav-links { display: flex; gap: 36px; }
+    .nav-links a {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--yellow); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      background: var(--black);
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 60% 50%, rgba(232,32,10,0.18) 0%, transparent 70%),
+        repeating-linear-gradient(45deg, transparent, transparent 60px, rgba(255,255,255,0.015) 60px, rgba(255,255,255,0.015) 61px);
+    }
+
+    .hero-content {
+      position: relative;
+      text-align: center;
+      padding: 0 24px;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: var(--yellow);
+      color: var(--black);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 6px 18px;
+      border-radius: 2px;
+      margin-bottom: 28px;
+    }
+
+    h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(5rem, 16vw, 13rem);
+      line-height: 0.9;
+      letter-spacing: 4px;
+      color: white;
+    }
+
+    h1 span { color: var(--red); }
+
+    .hero-sub {
+      margin-top: 24px;
+      font-size: 1.15rem;
+      color: rgba(255,255,255,0.55);
+      font-weight: 500;
+      letter-spacing: 1px;
+    }
+
+    .hero-cta {
+      display: inline-block;
+      margin-top: 44px;
+      background: var(--red);
+      color: white;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 16px 44px;
+      text-decoration: none;
+      border-radius: 3px;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .hero-cta:hover { background: var(--dark-red); transform: translateY(-2px); }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.3);
+      font-size: 0.7rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      animation: bounce 2s infinite;
+    }
+    .hero-scroll::after {
+      content: '';
+      width: 1px;
+      height: 40px;
+      background: rgba(255,255,255,0.2);
+    }
+
+    /* ── SECTION SHARED ── */
+    section { padding: 110px 48px; max-width: 1200px; margin: 0 auto; }
+
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      line-height: 1;
+      letter-spacing: 2px;
+      margin-bottom: 60px;
+    }
+
+    /* ── MENU ── */
+    #menu { padding-top: 130px; }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2px;
+    }
+
+    .menu-card {
+      background: var(--off-black);
+      padding: 40px 36px;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.25s;
+      cursor: default;
+    }
+    .menu-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 3px;
+      background: var(--red);
+      transition: width 0.35s ease;
+    }
+    .menu-card:hover { background: #222; }
+    .menu-card:hover::before { width: 100%; }
+
+    .menu-card-emoji {
+      font-size: 2.8rem;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .menu-card h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    .menu-card p {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.92rem;
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .menu-card-price {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem;
+      color: var(--yellow);
+      letter-spacing: 1px;
+    }
+
+    .menu-card-badge {
+      position: absolute;
+      top: 24px; right: 24px;
+      background: var(--red);
+      color: white;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 5px 10px;
+      border-radius: 2px;
+    }
+
+    /* ── DIVIDER ── */
+    .full-divider {
+      width: 100%;
+      height: 1px;
+      background: rgba(255,255,255,0.07);
+    }
+
+    /* ── CALENDAR ── */
+    #calendar { max-width: 1200px; }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .cal-header {
+      background: var(--red);
+      padding: 14px 8px;
+      text-align: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .cal-day {
+      border: 1px solid rgba(255,255,255,0.06);
+      min-height: 100px;
+      padding: 14px;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.6);
+      transition: background 0.2s;
+      position: relative;
+    }
+    .cal-day:hover { background: rgba(255,255,255,0.04); }
+
+    .cal-day.empty { background: rgba(0,0,0,0.3); }
+
+    .cal-day .date-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      color: white;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .cal-event {
+      display: inline-block;
+      background: var(--red);
+      color: white;
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 2px;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    .cal-event.yellow {
+      background: var(--yellow);
+      color: var(--black);
+    }
+
+    /* ── ABOUT ── */
+    #about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .about-visual {
+      position: relative;
+      height: 420px;
+      background: var(--off-black);
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .about-visual-emoji {
+      font-size: 9rem;
+      filter: drop-shadow(0 20px 60px rgba(232,32,10,0.4));
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .about-visual-glow {
+      position: absolute;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(232,32,10,0.25), transparent 70%);
+      border-radius: 50%;
+    }
+
+    .about-text .section-title { margin-bottom: 24px; }
+
+    .about-text p {
+      color: rgba(255,255,255,0.6);
+      font-size: 1rem;
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+
+    .about-stats {
+      display: flex;
+      gap: 40px;
+      margin-top: 40px;
+    }
+
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem;
+      color: var(--yellow);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--gray);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--off-black);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 50px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      color: var(--yellow);
+      letter-spacing: 2px;
+    }
+
+    .footer-hours {
+      text-align: center;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.85rem;
+      line-height: 2;
+    }
+
+    .footer-hours strong {
+      display: block;
+      color: white;
+      font-size: 0.75rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .footer-right {
+      text-align: right;
+      color: rgba(255,255,255,0.3);
+      font-size: 0.8rem;
+      line-height: 2;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(8px); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-16px); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+      .nav-links { gap: 20px; }
+      section { padding: 80px 24px; }
+      #about { grid-template-columns: 1fr; gap: 40px; }
+      .about-visual { height: 260px; }
+      .about-stats { gap: 24px; }
+      footer { flex-direction: column; gap: 28px; text-align: center; }
+      .footer-right { text-align: center; }
+      .cal-day { min-height: 70px; padding: 8px; }
+      .cal-day .date-num { font-size: 1rem; }
+      .cal-event { font-size: 0.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">🍔 Burker</div>
+  <div class="nav-links">
+    <a href="#menu">Menu</a>
+    <a href="#calendar">Events</a>
+    <a href="#about">About</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Est. right here, right now</div>
+    <h1>BURKER<br><span>BURGERS</span></h1>
+    <p class="hero-sub">Home of the Best Burgers in Town</p>
+    <a href="#menu" class="hero-cta">See the Menu</a>
+  </div>
+  <div class="hero-scroll">Scroll</div>
+</div>
+
+<!-- MENU -->
+<section id="menu">
+  <div class="section-label">What We Serve</div>
+  <div class="section-title">THE LINEUP</div>
+  <div class="menu-grid">
+
+    <div class="menu-card">
+      <span class="menu-card-emoji">🍔</span>
+      <h3>Classic Burger</h3>
+      <p>Juicy beef patty, crisp lettuce, ripe tomato, and melted cheese on a toasted bun.</p>
+      <div class="menu-card-price">$5.99</div>
+    </div>
+
+    <div class="menu-card">
+      <span class="menu-card-emoji">🥓</span>
+      <div class="menu-card-badge">Fan Fave</div>
+      <h3>Bacon Burger</h3>
+      <p>Thick-cut crispy bacon layered with sharp cheddar and our signature house sauce.</p>
+      <div class="menu-card-price">$6.99</div>
+    </div>
+
+    <div class="menu-card">
+      <span class="menu-card-emoji">🍗</span>
+      <div class="menu-card-badge">Signature</div>
+      <h3>Burker Crunch</h3>
+      <p>Crispy golden chicken, crunchy pickles, and our secret Burker sauce. Unforgettable.</p>
+      <div class="menu-card-price">$7.49</div>
+    </div>
+
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- EVENTS CALENDAR -->
+<section id="calendar">
+  <div class="section-label">What's Happening</div>
+  <div class="section-title">APRIL 2026</div>
+
+  <div class="cal-grid">
+    <!-- Day headers -->
+    <div class="cal-header">Sun</div>
+    <div class="cal-header">Mon</div>
+    <div class="cal-header">Tue</div>
+    <div class="cal-header">Wed</div>
+    <div class="cal-header">Thu</div>
+    <div class="cal-header">Fri</div>
+    <div class="cal-header">Sat</div>
+
+    <!-- Week 1: April starts on Wednesday -->
+    <div class="cal-day empty"></div>
+    <div class="cal-day empty"></div>
+    <div class="cal-day empty"></div>
+    <div class="cal-day"><div class="date-num">1</div><span class="cal-event yellow">🍔 Deal Day</span></div>
+    <div class="cal-day"><div class="date-num">2</div></div>
+    <div class="cal-day"><div class="date-num">3</div></div>
+    <div class="cal-day"><div class="date-num">4</div><span class="cal-event">🎉 Live Burkens</span></div>
+
+    <!-- Week 2 -->
+    <div class="cal-day"><div class="date-num">5</div></div>
+    <div class="cal-day"><div class="date-num">6</div></div>
+    <div class="cal-day"><div class="date-num">7</div></div>
+    <div class="cal-day"><div class="date-num">8</div></div>
+    <div class="cal-day"><div class="date-num">9</div></div>
+    <div class="cal-day"><div class="date-num">10</div></div>
+    <div class="cal-day"><div class="date-num">11</div><span class="cal-event yellow">🥓 Bacon Day</span></div>
+
+    <!-- Week 3 -->
+    <div class="cal-day"><div class="date-num">12</div></div>
+    <div class="cal-day"><div class="date-num">13</div></div>
+    <div class="cal-day"><div class="date-num">14</div></div>
+    <div class="cal-day"><div class="date-num">15</div><span class="cal-event">🎶 Burger Night</span></div>
+    <div class="cal-day"><div class="date-num">16</div></div>
+    <div class="cal-day"><div class="date-num">17</div></div>
+    <div class="cal-day"><div class="date-num">18</div></div>
+
+    <!-- Week 4 -->
+    <div class="cal-day"><div class="date-num">19</div></div>
+    <div class="cal-day"><div class="date-num">20</div></div>
+    <div class="cal-day"><div class="date-num">21</div></div>
+    <div class="cal-day"><div class="date-num">22</div></div>
+    <div class="cal-day"><div class="date-num">23</div></div>
+    <div class="cal-day"><div class="date-num">24</div></div>
+    <div class="cal-day"><div class="date-num">25</div><span class="cal-event yellow">🍔 Deal Day</span></div>
+
+    <!-- Week 5 -->
+    <div class="cal-day"><div class="date-num">26</div></div>
+    <div class="cal-day"><div class="date-num">27</div></div>
+    <div class="cal-day"><div class="date-num">28</div></div>
+    <div class="cal-day"><div class="date-num">29</div></div>
+    <div class="cal-day"><div class="date-num">30</div><span class="cal-event">🎉 Month Close</span></div>
+    <div class="cal-day empty"></div>
+    <div class="cal-day empty"></div>
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-visual">
+    <div class="about-visual-glow"></div>
+    <div class="about-visual-emoji">🍔</div>
+  </div>
+  <div class="about-text">
+    <div class="section-label">Our Story</div>
+    <div class="section-title">MADE WITH<br>REAL LOVE</div>
+    <p>Welcome to Burker Burgers — where every patty is pressed fresh, every bun is toasted golden, and every bite is worth the wait.</p>
+    <p>We've been serving the neighborhood the kind of burgers that keep people coming back. No shortcuts, no frozen stuff. Just good food, great vibes, and even better prices.</p>
+    <div class="about-stats">
+      <div>
+        <div class="stat-num">3</div>
+        <div class="stat-label">Signature Burgers</div>
+      </div>
+      <div>
+        <div class="stat-num">7</div>
+        <div class="stat-label">Days a Week</div>
+      </div>
+      <div>
+        <div class="stat-num">∞</div>
+        <div class="stat-label">Satisfaction</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">🍔 Burker</div>
+  <div class="footer-hours">
+    <strong>Hours</strong>
+    Mon – Thu &nbsp;11am – 9pm<br>
+    Fri – Sat &nbsp;&nbsp;&nbsp;11am – 11pm<br>
+    Sunday &nbsp;&nbsp;&nbsp;&nbsp;12pm – 8pm
+  </div>
+  <div class="footer-right">
+    Home of the Best Burgers<br>
+    Follow the rooster 🐔
+  </div>
+</footer>
+
+</body>
+</html>
