@@ -249,7 +249,64 @@
       height: 1px;
       background: rgba(255,255,255,0.07);
     }
+	
+	/* ── HOME ── */
+	#home { max-width: 1200px; }
 
+    .home-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .home-header {
+      background: var(--red);
+      padding: 14px 8px;
+      text-align: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .home-day {
+      border: 1px solid rgba(255,255,255,0.06);
+      min-height: 100px;
+      padding: 14px;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.6);
+      transition: background 0.2s;
+      position: relative;
+    }
+    .home-day:hover { background: rgba(255,255,255,0.04); }
+
+    .home-day.empty { background: rgba(0,0,0,0.3); }
+
+    .home-day .date-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      color: white;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .home-event {
+      display: inline-block;
+      background: var(--red);
+      color: white;
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 2px;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    .home-event.yellow {
+      background: var(--yellow);
+      color: var(--black);
+    }
+	
     /* ── CALENDAR ── */
     #calendar { max-width: 1200px; }
 
@@ -446,6 +503,7 @@
   <div class="nav-logo">🍔 Burker</div>
   <div class="nav-links">
     <a href="#menu">Menu</a>
+	<a href="https://killerm0nkey182.github.io/darrelburke-site/" target="_self">home</a>
     <a href="#calendar">Events</a>
     <a href="#about">About</a>
   </div>
